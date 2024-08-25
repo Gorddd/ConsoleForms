@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\ConsoleForms\\Src\\ConsoleForms\\ConsoleForms\\ConsoleForms.csproj",
+      "projectUniqueName": "D:\\Projects\\ConsoleForms\\Src\\ConsoleForms\\ConsoleForms.csproj",
       "projectName": "ConsoleForms",
-      "projectPath": "D:\\Projects\\ConsoleForms\\Src\\ConsoleForms\\ConsoleForms\\ConsoleForms.csproj",
+      "projectPath": "D:\\Projects\\ConsoleForms\\Src\\ConsoleForms\\ConsoleForms.csproj",
       "packagesPath": "C:\\Users\\pocht\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\ConsoleForms\\Src\\ConsoleForms\\ConsoleForms\\obj\\",
+      "outputPath": "D:\\Projects\\ConsoleForms\\Src\\ConsoleForms\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pocht\\AppData\\Roaming\\NuGet\\NuGet.Config",
