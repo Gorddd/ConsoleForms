@@ -12,15 +12,17 @@ BackgroundFunction(notifier, cancellationTokenSource.Token);
 app.Run();
 
 
+app.Dispose();
+cancellationTokenSource.Cancel();
 // Notify every minute in the other thread
 void BackgroundFunction(Notifier notifier, CancellationToken cancellationToken)
 {
-    Task.Run(() =>
+    Task.Run(async () =>
     {
         while (true)
         {
             if (cancellationToken.IsCancellationRequested) break;
-            Task.Delay(TimeSpan.FromMinutes(1));
+            await Task.Delay(TimeSpan.FromSeconds(3));
             notifier.Notify(new SomeMessage
             {
                 Text = $"Hello, it's {DateTime.Now} already. Have you done your homework?"

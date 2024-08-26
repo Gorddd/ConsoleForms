@@ -1,4 +1,5 @@
-﻿using ConsoleForms.Forms;
+﻿using ConsoleForms.Core;
+using ConsoleForms.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ class MainForm : Form, ConsoleForms.Notifications.IObserver<SomeMessage>
             {
                 case ConsoleKey.D0:
                     Close();
-                    break;
+                    return;
             }
         }
     }
@@ -32,9 +33,12 @@ class MainForm : Form, ConsoleForms.Notifications.IObserver<SomeMessage>
 
     public void Update(SomeMessage message)
     {
-        Console.Clear();
-        Console.WriteLine($"You got some message: {message.Text}");
-        Draw();
+        Dispatcher.Invoke(() =>
+        {
+            Console.Clear();
+            Console.WriteLine($"You got some message: {message.Text}");
+            Draw();
+        });
     }
 }
 

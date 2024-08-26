@@ -16,14 +16,37 @@ public class App : IDisposable
     private readonly TextReader _defaultReader = Console.In;
 
     private readonly FormsStack _formsStack;
+    private bool _hasStopped = false;
+
+
 
     public App(Form mainForm)
     {
-        Console.SetOut(new ThreadSafeWriter(Thread.CurrentThread.ManagedThreadId, _defaultWriter));
-        Console.SetIn(new ThreadSafeReader(Thread.CurrentThread.ManagedThreadId, _defaultReader));
-
         mainForm.App = this;
         _formsStack = new FormsStack(mainForm);
+
+        InitializeThreadSafe();
+    }
+
+    private void InitializeThreadSafe()
+    {
+        var consoleInitSemaphore = new SemaphoreSlim(0);
+        var safeThreadSemaphore = new SemaphoreSlim(0);
+        
+        int safeThreadId = default;
+        new Thread(() =>
+        {
+            safeThreadId = Thread.CurrentThread.ManagedThreadId;
+            consoleInitSemaphore.Release();
+            safeThreadSemaphore.Wait();
+            while (!_hasStopped)
+                Dispatcher.ExecuteRequestedActions();
+        }).Start();
+        consoleInitSemaphore.Wait();
+
+        Console.SetOut(new ThreadSafeWriter(safeThreadId, Thread.CurrentThread.ManagedThreadId, _defaultWriter));
+        Console.SetIn(new ThreadSafeReader(safeThreadId, Thread.CurrentThread.ManagedThreadId, _defaultReader, _defaultWriter));
+        safeThreadSemaphore.Release();
     }
 
     public App(Form mainForm, Notifier notifier) : this(mainForm)
@@ -35,6 +58,9 @@ public class App : IDisposable
     {
         Console.SetOut(_defaultWriter);
         Console.SetIn(_defaultReader);
+
+        _hasStopped = true;
+        Dispatcher.Free();
     }
 
     public void Run()

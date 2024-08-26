@@ -11,18 +11,24 @@ internal class ThreadSafeWriter : TextWriter
     public override Encoding Encoding => Encoding.Default;
 
     private readonly TextWriter _writer;
+    private readonly int _safeThreadId;
     private readonly int _uiThreadId;
 
-    public ThreadSafeWriter(int uiThreadId, TextWriter writer)
+    public ThreadSafeWriter(int safeThreadId, int uiThreadId, TextWriter writer)
     {
         _writer = writer;
+        _safeThreadId = safeThreadId;
         _uiThreadId = uiThreadId;
     }
 
     private void CheckThread()
     {
-        if (Thread.CurrentThread.ManagedThreadId != _uiThreadId)
-            throw new InvalidOperationException("Cannot use console stream not in UI thread to prevent thread-unsafe operations");
+        if (Thread.CurrentThread.ManagedThreadId != _safeThreadId && Thread.CurrentThread.ManagedThreadId != _uiThreadId)
+        {
+            var ex = new InvalidOperationException("Cannot use console stream not in UI thread to prevent thread-unsafe operations");
+            _writer.WriteLine(ex);
+            throw ex;
+        }
     }
 
     public override void Write(bool value)
