@@ -1,12 +1,6 @@
 ﻿using ConsoleForms.Core.IOStreams;
 using ConsoleForms.Forms;
 using ConsoleForms.Notifications;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleForms.Core;
 
@@ -17,9 +11,7 @@ public class App : IDisposable
 
     private readonly FormsStack _formsStack;
     private bool _hasStopped = false;
-
-
-
+    
     public App(Form mainForm)
     {
         mainForm.App = this;
@@ -52,6 +44,11 @@ public class App : IDisposable
     public App(Form mainForm, Notifier notifier) : this(mainForm)
     {
         notifier.FormsStack = _formsStack;
+    }
+
+    ~App()
+    {
+        Dispose();
     }
 
     public void Dispose()
