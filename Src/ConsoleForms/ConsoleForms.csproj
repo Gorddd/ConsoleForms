@@ -7,11 +7,11 @@
 		<Nullable>enable</Nullable>
 		<PackageId>ConsoleForms</PackageId>
 		<PackageVersion>1.0.0-alpha</PackageVersion>
-		<Author>Gorddd</Author>
+		<Authors>Gorddd</Authors>
 		<Product>ConsoleForms</Product>
 		<Description>A library for creating well-organized multi-page console apps</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://github.com/Gorddd/ConsoleForms</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Gorddd/ConsoleForms</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>cli;console-app;console;cli-app;console-lib</PackageTags>
 	</PropertyGroup>
