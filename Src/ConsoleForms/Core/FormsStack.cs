@@ -10,7 +10,7 @@ internal class FormsStack
 
     public FormsStack()
     {
-        
+
     }
 
     public FormsStack(Form rootForm)
