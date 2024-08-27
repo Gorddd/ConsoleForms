@@ -9,15 +9,26 @@ public class App : IDisposable
     private readonly TextWriter _defaultWriter = Console.Out;
     private readonly TextReader _defaultReader = Console.In;
 
-    private readonly FormsStack _formsStack;
-    private bool _hasStopped = false;
+    private readonly FormsStack _formsStack = new FormsStack();
+    
+    private static bool _isRunning = false;
     
     public App(Form mainForm)
     {
-        mainForm.App = this;
-        _formsStack = new FormsStack(mainForm);
+        InitializeForm(mainForm);
+    }
 
-        InitializeThreadSafe();
+    public App(Form mainForm, Notifier notifier) : this(mainForm)
+    {
+        notifier.FormsStack = _formsStack;
+
+        mainForm.Notifier = notifier;
+    }
+
+    private void InitializeForm(Form form)
+    {
+        form.App = this;
+        _formsStack.Up(form);
     }
 
     private void InitializeThreadSafe()
@@ -31,7 +42,7 @@ public class App : IDisposable
             safeThreadId = Thread.CurrentThread.ManagedThreadId;
             consoleInitSemaphore.Release();
             safeThreadSemaphore.Wait();
-            while (!_hasStopped)
+            while (_isRunning)
                 Dispatcher.ExecuteRequestedActions();
         }).Start();
         consoleInitSemaphore.Wait();
@@ -41,11 +52,6 @@ public class App : IDisposable
         safeThreadSemaphore.Release();
     }
 
-    public App(Form mainForm, Notifier notifier) : this(mainForm)
-    {
-        notifier.FormsStack = _formsStack;
-    }
-
     ~App()
     {
         Dispose();
@@ -53,29 +59,40 @@ public class App : IDisposable
 
     public void Dispose()
     {
-        Console.SetOut(_defaultWriter);
-        Console.SetIn(_defaultReader);
-
-        _hasStopped = true;
-        Dispatcher.Free();
+        ShutDown();
     }
 
     public void Run()
     {
+        if (_isRunning) throw new InvalidOperationException("You already have running app in this application domain");
+        _isRunning = true;
+
+        InitializeThreadSafe();
+
         while (true)
         {
-            if (_formsStack.Current is null) return;
+            if (_formsStack.Current is null) break;
             Console.Clear();
 
             _formsStack.Current.Draw();
             _formsStack.Current.Activate();
         }
+
+        ShutDown();
+    }
+
+    private void ShutDown()
+    {
+        Console.SetOut(_defaultWriter);
+        Console.SetIn(_defaultReader);
+
+        _isRunning = false;
+        Dispatcher.Free();
     }
 
     internal void Show(Form form)
     {
-        form.App = this;
-        _formsStack.Up(form);
+        InitializeForm(form);
     }
 
     internal void Back()

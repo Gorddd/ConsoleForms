@@ -1,4 +1,5 @@
 ﻿using ConsoleForms.Core;
+using ConsoleForms.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,4 +46,9 @@ public abstract class Form
     {
         App.BackToRoot();
     }
+
+    /// <summary>
+    /// Not null if App was created with Notifier
+    /// </summary>
+    protected internal Notifier? Notifier { get; internal set; }
 }
