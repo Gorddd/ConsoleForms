@@ -1,5 +1,5 @@
 # ConsoleForms
-![NuGet Version](https://img.shields.io/nuget/vpre/ConsoleForms)
+[![NuGet Version](https://img.shields.io/nuget/vpre/ConsoleForms)](https://www.nuget.org/packages/ConsoleForms/1.0.0-alpha)
 
 
 Just a simple .NET library that makes creating well-organized multi-page console applications a little easier.
