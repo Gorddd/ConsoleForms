@@ -25,7 +25,7 @@ internal class ThreadSafeReader : TextReader
     {
         if (Thread.CurrentThread.ManagedThreadId != _safeThreadId && Thread.CurrentThread.ManagedThreadId != _uiThreadId)
         {
-            var ex = new InvalidOperationException("Cannot use console stream not in UI thread to prevent thread-unsafe operations");
+            var ex = new InvalidOperationException("Cannot use console stream not in UI thread to prevent thread-unsafe operations. Use Dispatcher.Invoke()");
             _writer.WriteLine(ex);
             throw ex;
         }
